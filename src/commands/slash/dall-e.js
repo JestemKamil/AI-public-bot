@@ -1,7 +1,17 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const axios = require('axios')
 const { EmbedBuilder } = require('@discordjs/builders') // Keep using your custom EmbedBuilder
-const { dallEApiKey } = require('../../data.json')
+const { apiopenai } = require('../../data.json')
+const Database = require('better-sqlite3')
+const db = new Database('./main.db')
+
+const createTableQuery = `CREATE TABLE IF NOT EXISTS dAllEUsage (
+	guildId TEXT PRIMARY KEY,
+	date TEXT NOT NULL,
+	count INTEGER NOT NULL DEFAULT 0
+  );`
+
+db.exec(createTableQuery)
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -10,6 +20,27 @@ module.exports = {
 		.addStringOption(option => option.setName('opis').setDescription('Opis obrazka').setRequired(true)),
 	async execute(interaction) {
 		const prompt = interaction.options.getString('opis')
+
+		// Pobranie aktualnej daty w formacie YYYY-MM-DD
+		const currentDate = new Date().toISOString().split('T')[0]
+
+		// Pobranie limitu użycia komendy /dall-e dla tego serwera z bazy danych
+		const limitRow = db.prepare('SELECT dallELimit FROM commandLimits WHERE guildId = ?').get(interaction.guildId)
+		const maxDAllEUsage = limitRow ? limitRow.dallELimit : 25 // Ustawienie domyślnego limitu na 25, jeśli nie został ustawiony przez administratora
+
+		// Pobranie liczby użycia komendy z bazy danych
+		const usageRow = db
+			.prepare('SELECT count FROM dAllEUsage WHERE guildId = ? AND date = ?')
+			.get(interaction.guildId, currentDate)
+		const usageCount = usageRow ? usageRow.count : 0
+
+		// Sprawdzenie, czy limit użycia komendy został przekroczony
+		if (usageCount >= maxDAllEUsage) {
+			return interaction.reply({
+				content: 'Skończyły się dzisiejsze użycia komendy /dall-e na tym serwerze.',
+				fetchReply: false,
+			})
+		}
 
 		await interaction.deferReply()
 
@@ -31,6 +62,13 @@ module.exports = {
 				})
 
 			await interaction.editReply({ embeds: [embed] })
+
+			// Zwiększenie licznika użycia komendy w bazie danych
+			db.prepare('INSERT OR REPLACE INTO dAllEUsage (guildId, date, count) VALUES (?, ?, ?)').run(
+				interaction.guildId,
+				currentDate,
+				usageCount + 1
+			)
 		} catch (error) {
 			console.error(error)
 			await interaction.editReply(
@@ -50,7 +88,7 @@ async function generateImageWithDALL_E(prompt) {
 		{
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${dallEApiKey}`,
+				Authorization: `Bearer ${apiopenai}`,
 			},
 		}
 	)

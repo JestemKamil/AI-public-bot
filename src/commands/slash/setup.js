@@ -2,13 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders')
 const Database = require('better-sqlite3')
 const db = new Database('./main.db')
 
-// Tworzenie tabeli, jeśli nie istnieje
-db.prepare(
-	`CREATE TABLE IF NOT EXISTS korwinChatChannel (
-    guildId TEXT PRIMARY KEY,
-    channelId TEXT
-)`
-).run()
+
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -30,7 +24,7 @@ module.exports = {
 		),
 	async execute(interaction) {
 		const updatingMessage = await interaction.reply({
-			content: 'Trwa aktualizowanie kanału z chatem...',
+			content: '<a:dev_load:1136656449167171714> Trwa aktualizowanie kanału z chatem...',
 			fetchReply: true,
 		})
 
@@ -41,22 +35,16 @@ module.exports = {
 				// Sprawdzenie, czy użytkownik podał poprawne ID kanału
 				const channel = interaction.guild.channels.cache.get(channelID)
 				if (!channel) {
-					return await updatingMessage.edit({ content: 'Podane ID kanału jest niepoprawne.' })
+					return await updatingMessage.edit({
+						content: '<a:NO:1136659789892562975> Podane ID kanału jest niepoprawne.',
+					})
 				}
 
 				// Sprawdzenie, czy na kanale jest ustawione 10-sekundowe opóźnienie na pisanie
 				if (channel.rateLimitPerUser < 10) {
 					return await updatingMessage.edit({
 						content:
-							'Na wybranym kanale nie jest ustawione 10-sekundowe opóźnienie na pisanie. Aby ustawić setup, najpierw ustaw opóźnienie na 10 sekund lub więcej.',
-					})
-				}
-
-				// Sprawdzenie, czy istnieje już kanał do rozmowy z botem
-				const row = db.prepare('SELECT channelId FROM korwinChatChannel WHERE guildId = ?').get(interaction.guildId)
-				if (row) {
-					return await updatingMessage.edit({
-						content: 'Możesz ustawić tylko jeden kanał do rozmowy z botem w stylu Janusza Korwina-Mikke.',
+							'<a:NO:1136659789892562975> Na wybranym kanale nie jest ustawione 10-sekundowe opóźnienie na pisanie. Aby ustawić setup, najpierw ustaw opóźnienie na 10 sekund lub więcej.',
 					})
 				}
 
@@ -68,7 +56,7 @@ module.exports = {
 
 				setTimeout(() => {
 					updatingMessage.edit(
-						`Pomyślnie ustawiono kanał o ID: ${channelID} jako kanał do rozmowy z botem w stylu Janusza Korwina-Mikke.`
+						`<a:succes:1136659149388779670> Pomyślnie ustawiono kanał  <#${channelID}> jako kanał do rozmowy z botem w stylu Janusza Korwina-Mikke.`
 					)
 				}, 5000)
 			} else if (interaction.options.getSubcommand() === 'usuń') {
@@ -76,7 +64,9 @@ module.exports = {
 				db.prepare('DELETE FROM korwinChatChannel WHERE guildId = ?').run(interaction.guildId)
 
 				setTimeout(() => {
-					updatingMessage.edit(`Kanał do rozmowy z botem w stylu Janusza Korwina-Mikke został usunięty.`)
+					updatingMessage.edit(
+						`<a:succes:1136659149388779670> Kanał do rozmowy z botem w stylu Janusza Korwina-Mikke został usunięty.`
+					)
 				}, 5000)
 			}
 		}

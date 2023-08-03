@@ -1,44 +1,4 @@
 {
-	"token": "MTEwODg0MTA5MDczMzMxNDE1OA.GdHPqG.6L8qbOWKgeus_SfSkadsD3ZQNzTTa5wDD7TYzg",
 	"apiopenai": "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",
-	"clientid": "1108841090733314158",
-	"commands": [
-		{
-			"name": "openai",
-			"description": "Zadaj upośledzone pytanie czy cuś",
-			"options": [
-				{
-					"name": "treść",
-					"description": "treść pytania",
-					"type": 3,
-					"required": true
-				},
-				{
-					"name": "kreatywnosc",
-					"description": "kreatywnosc modelu (od 1 do 100)",
-					"type": 4,
-					"required": false
-				}
-			]
-		},
-		{
-			"name": "dall-e",
-			"description": "Generuj obrazy z opisów za pomocą modelu DALL-E",
-			"options": [
-				{
-					"name": "opis",
-					"description": "opis obrazu",
-					"type": 3,
-					"required": true
-				}
-			]
-		},
-		{
-			"name": "help",
-			"description": "Wyświetl informacje o bocie"
-		}
-	],
-	"logChannelId": "1111406598859010199",
-	"dallEApiKey": "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",
 	"dallEModelId": "image-dall-e-003"
 }

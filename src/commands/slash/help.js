@@ -13,6 +13,8 @@ module.exports = {
 			.addFields(
 				{ name: '/openai', value: 'Zadaj pytanie do modelu OpenAI' },
 				{ name: '/dall-e', value: 'Generuj obraz z opisu za pomocą modelu DALL-E' },
+				{ name: '/setup', value: 'Można ustawić czat z korwinem lub go usunąć (jest to AI tylko tak jakby korwin)' },
+				{ name: '/status', value: 'Pod tą komendą możemy zobaczyć aktualne limity jakie są na serwerze' },
 				{ name: 'Ostatnia modyfikacja:', value: '<t:1690980720:R>', inline: true },
 				{ name: 'Najnowsza komenda:', value: '/dall-e', inline: true }
 			)

@@ -5,23 +5,6 @@ const openai = new OpenAIApi(configuration)
 const Database = require('better-sqlite3')
 const db = new Database('./main.db')
 
-// Tworzenie tabeli, jeśli nie istnieje
-db.prepare(
-	`CREATE TABLE IF NOT EXISTS korwinChatChannel (
-    guildId TEXT PRIMARY KEY,
-    channelId TEXT
-)`
-).run()
-
-// Tworzenie tabeli, jeśli nie istnieje
-db.prepare(
-	`CREATE TABLE IF NOT EXISTS korwinUsage (
-    guildId TEXT PRIMARY KEY,
-    date TEXT,
-    count INTEGER
-)`
-).run()
-
 module.exports = {
 	name: 'messageCreate',
 	async execute(message) {
@@ -34,6 +17,10 @@ module.exports = {
 			// Pobranie aktualnej daty w formacie YYYY-MM-DD
 			const currentDate = new Date().toISOString().split('T')[0]
 
+			// Pobranie limitu użycia chatu Korwina dla tego serwera z bazy danych
+			const limitRow = db.prepare('SELECT korwinLimit FROM commandLimits WHERE guildId = ?').get(message.guildId)
+			const maxKorwinUsage = limitRow ? limitRow.korwinLimit : 25 // Ustawienie domyślnego limitu na 25, jeśli nie został ustawiony przez administratora
+
 			// Pobranie liczby użycia komendy z bazy danych
 			const usageRow = db
 				.prepare('SELECT count FROM korwinUsage WHERE guildId = ? AND date = ?')
@@ -41,7 +28,7 @@ module.exports = {
 			const usageCount = usageRow ? usageRow.count : 0
 
 			// Sprawdzenie, czy limit użycia komendy został przekroczony
-			if (usageCount >= 5) {
+			if (usageCount >= maxKorwinUsage) {
 				return message.channel.send(
 					'Skończyły się dzisiejsze użycia bota w stylu Janusza Korwina-Mikke na tym serwerze.'
 				)
