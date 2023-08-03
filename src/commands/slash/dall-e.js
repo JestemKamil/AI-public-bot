@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const axios = require('axios')
 const { EmbedBuilder } = require('@discordjs/builders') // Keep using your custom EmbedBuilder
-const { dallEApiKey } = require('../../data.json')
+const { apiopenai } = require('../../data.json')
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -50,7 +50,7 @@ async function generateImageWithDALL_E(prompt) {
 		{
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${dallEApiKey}`,
+				Authorization: `Bearer ${apiopenai}`,
 			},
 		}
 	)

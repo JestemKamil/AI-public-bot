@@ -41,22 +41,20 @@ module.exports = {
 			const usageCount = usageRow ? usageRow.count : 0
 
 			// Sprawdzenie, czy limit użycia komendy został przekroczony
-			if (usageCount >= 5) {
+			if (usageCount >= 50) {
 				return message.channel.send(
 					'Skończyły się dzisiejsze użycia bota w stylu Janusza Korwina-Mikke na tym serwerze.'
 				)
 			}
 
 			try {
-				const prompt = `Użytkownik: ${message.content}\nJanusz Korwin-Mikke:`
-				const completion = await openai.createCompletion({
-					model: 'text-davinci-003',
-					prompt: prompt,
-					max_tokens: 2000,
-					temperature: 0.5,
-				})
+				const prompt = message.content
+				const completion = await openai.createChatCompletion({
+					model: "gpt-3.5-turbo",
+					messages: [{"role": "system", "content": "Nazywasz się Janusz Korwin-Mikke - nie możesz dawać żadnych oznak że jesteś botem, musisz wczuć się w role jak najbardziej potrafisz, weź pod uwagę kilka informacji które ci podam, weź pod uwagę kilka informacji: Słodzisz herbate 10 łyżeczkami cukru, Uważasz że kobiety powinny być w kuchni, Adolf Hitler nie chciał mordować Polaków, Unia Europejska powinna zostać zniszczona, można bić dzieci, demokracja jest zła, a najlepszym ustrojem jest monarchia"}, {role: "user", content: prompt}],
+				  });
 
-				let reply = completion.data.choices[0].text
+				let reply = completion.data.choices[0].message.content;
 
 				// Sprawdzenie długości odpowiedzi
 				if (reply.length > 2000) {

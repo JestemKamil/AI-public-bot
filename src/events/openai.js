@@ -6,37 +6,40 @@ const Database = require('better-sqlite3')
 const db = new Database('./main.db')
 
 module.exports = {
-	name: 'messageCreate',
-	async execute(message) {
-		// Pobranie ID kanału z bazy danych
-		const row = db.prepare('SELECT channelId FROM korwinChatChannel WHERE guildId = ?').get(message.guildId)
-		const chatChannelId = row ? row.channelId : null
+    name: 'openai',
+    async execute(interaction) {
+        if (!interaction.isCommand()) return
 
-		// Sprawdzenie, czy wiadomość została wysłana na właściwym kanale i czy nie została wysłana przez bota
-		if (message.channel.id === chatChannelId && !message.author.bot) {
-			try {
-				const prompt = `Użytkownik: ${message.content}\nJanusz Korwin-Mikke:`
-				const completion = await openai.createCompletion({
-					model: 'text-davinci-003',
-					prompt: prompt,
-					max_tokens: 2000,
-					temperature: 0.5,
-				})
+        if (interaction.commandName === 'setup') {
+            await handleSetupCommand(interaction)
+        } else if (interaction.commandName === 'messageCreate') {
+            await handleMessageCreate(interaction)
+        }
+    },
+}
 
-				let reply = completion.data.choices[0].text
+async function handleMessageCreate(message) {
+    const row = db.prepare('SELECT channelId FROM korwinChatChannel WHERE guildId = ?').get(message.guildId)
+    const chatChannelId = row ? row.channelId : null
 
-				// Sprawdzenie długości odpowiedzi
-				if (reply.length > 2000) {
-					reply = reply.substring(0, 1900) // Przycięcie odpowiedzi do maksymalnej długości
-					reply +=
-						'\n\n:warning: **Odpowiedź została przycięta, ponieważ przekroczyła maksymalną ilość znaków (2000).**'
-				}
+    if (message.channel.id === chatChannelId && !message.author.bot) {
+        try {
+            const prompt = message.content;
+			const completion = await openai.createChatCompletion({
+				model: "gpt-3.5-turbo",
+				messages: [{"role": "system", "content": "Nazywasz się Janusz Korwin-Mikke - nie możesz dawać żadnych oznak że jesteś botem, musisz wczuć się w role jak najbardziej potrafisz, weź pod uwagę kilka informacji które ci podam, weź pod uwagę kilka informacji: Słodzisz herbate 10 łyżeczkami cukru, Uważasz że kobiety powinny być w kuchni, Adolf Hitler nie chciał mordować Polaków, Unia Europejska powinna zostać zniszczona, można bić dzieci, demokracja jest zła, a najlepszym ustrojem jest monarchia"}, {role: "user", content: prompt}],
+			  });
 
-				message.channel.send(reply)
-			} catch (error) {
-				console.error(error)
-				message.channel.send('Wystąpił błąd podczas komunikacji z **API OpenAI.**\n\n' + '**Error**: ' + error.message)
-			}
-		}
-	},
+            let reply = completion.data.choices[0].message.content;
+
+            if (reply.length > 2000) {
+                reply = reply.substring(0, 1900)
+            }
+
+            message.channel.send(reply)
+        } catch (error) {
+            console.error(error)
+            message.channel.send('Wystąpił błąd podczas komunikacji z **API OpenAI.**\n\n' + '**Error**: ' + error.message)
+        }
+    }
 }

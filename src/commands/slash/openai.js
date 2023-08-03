@@ -7,26 +7,11 @@ const openai = new OpenAIApi(configuration)
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('openai')
-		.setDescription('Zadaj pytanie do modelu OpenAI')
-		.addStringOption(option => option.setName('treść').setDescription('Treść pytania').setRequired(true))
-		.addIntegerOption(option => option.setName('temperatura').setDescription('Temperatura odpowiedzi (1-100)')),
+		.setDescription('Zadaj pytanie do GPT')
+		.addStringOption(option => option.setName('treść').setDescription('Treść pytania').setRequired(true).setMaxLength(2000)),
 	async execute(interaction) {
 		const question = interaction.options.getString('treść')
-		const temperatureInput = interaction.options.getInteger('temperatura')
 
-		// Walidacja temperatury
-		let temperature = 0
-		if (temperatureInput) {
-			if (temperatureInput < 1 || temperatureInput > 100) {
-				return await interaction.reply(`Temperatura musi być w zakresie od 1 do 100.`)
-			}
-			temperature = temperatureInput / 100
-		}
-
-		// Sprawdzenie długości wiadomości
-		if (question.length > 2000) {
-			return await interaction.reply('Wiadomość przekroczyła maksymalną ilość znaków (2000). Proszę skrócić wiadomość.')
-		}
 
 		await interaction.reply({
 			content: `<:1108820964948590724:1136620320397197322> **Odpowiedź na pytanie:** ${question}\n\n<:1108820964948590724:1136620320397197322> **Autor wiadomości:** ${interaction.user}`,
@@ -34,14 +19,12 @@ module.exports = {
 		})
 
 		try {
-			const completion = await openai.createCompletion({
-				model: 'text-davinci-003',
-				prompt: question,
-				max_tokens: 2000,
-				temperature: temperature,
-			})
+			const completion = await openai.createChatCompletion({
+				model: "gpt-3.5-turbo",
+				messages: [{"role": "system", "content": "Jesteś chatbotem AI."}, {role: "user", content: question}],
+			  });
 
-			let reply = completion.data.choices[0].text
+			let reply = completion.data.choices[0].message.content;
 
 			// Sprawdzenie długości odpowiedzi
 			if (reply.length > 2000) {
@@ -50,6 +33,7 @@ module.exports = {
 			}
 
 			await interaction.followUp(reply)
+
 			if (completion.data.choices[0].finish_reason === 'incomplete') {
 				await interaction.followUp(
 					'<:warning:1234567890> **Odpowiedź przekroczyła maksymalną ilość tokenów (2000) i została przerwana.**'
