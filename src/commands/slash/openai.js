@@ -17,32 +17,25 @@ db.exec(createTableQuery)
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('openai')
-		.setDescription('Zadaj pytanie do GPT')
-		.addStringOption(option =>
-			option.setName('treść').setDescription('Treść pytania').setRequired(true).setMaxLength(2000)
-		),
+		.setDescription('Zadaj pytanie do modelu OpenAI')
+		.addStringOption(option => option.setName('treść').setDescription('Treść pytania').setRequired(true))
+		.addIntegerOption(option => option.setName('temperatura').setDescription('Temperatura odpowiedzi (1-100)')),
 	async execute(interaction) {
 		const question = interaction.options.getString('treść')
+		const temperatureInput = interaction.options.getInteger('temperatura')
 
-		// Pobranie aktualnej daty w formacie YYYY-MM-DD
-		const currentDate = new Date().toISOString().split('T')[0]
+		// Walidacja temperatury
+		let temperature = 0
+		if (temperatureInput) {
+			if (temperatureInput < 1 || temperatureInput > 100) {
+				return await interaction.reply(`Temperatura musi być w zakresie od 1 do 100.`)
+			}
+			temperature = temperatureInput / 100
+		}
 
-		// Pobranie limitu użycia komendy /openai dla tego serwera z bazy danych
-		const limitRow = db.prepare('SELECT openaiLimit FROM commandLimits WHERE guildId = ?').get(interaction.guildId)
-		const maxOpenaiUsage = limitRow ? limitRow.openaiLimit : 25 // Ustawienie domyślnego limitu na 25, jeśli nie został ustawiony przez administratora
-
-		// Pobranie liczby użycia komendy z bazy danych
-		const usageRow = db
-			.prepare('SELECT count FROM openaiUsage WHERE guildId = ? AND date = ?')
-			.get(interaction.guildId, currentDate)
-		const usageCount = usageRow ? usageRow.count : 0
-
-		// Sprawdzenie, czy limit użycia komendy został przekroczony
-		if (usageCount >= maxOpenaiUsage) {
-			return interaction.reply({
-				content: 'Skończyły się dzisiejsze użycia komendy /openai na tym serwerze.',
-				fetchReply: false,
-			})
+		// Sprawdzenie długości wiadomości
+		if (question.length > 2000) {
+			return await interaction.reply('Wiadomość przekroczyła maksymalną ilość znaków (2000). Proszę skrócić wiadomość.')
 		}
 
 		await interaction.reply({
@@ -51,15 +44,14 @@ module.exports = {
 		})
 
 		try {
-			const completion = await openai.createChatCompletion({
-				model: 'gpt-3.5-turbo',
-				messages: [
-					{ role: 'system', content: 'Jesteś chatbotem AI.' },
-					{ role: 'user', content: question },
-				],
+			const completion = await openai.createCompletion({
+				model: 'text-davinci-003',
+				prompt: question,
+				max_tokens: 2000,
+				temperature: temperature,
 			})
 
-			let reply = completion.data.choices[0].message.content
+			let reply = completion.data.choices[0].text
 
 			// Sprawdzenie długości odpowiedzi
 			if (reply.length > 2000) {

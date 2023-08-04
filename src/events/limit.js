@@ -29,40 +29,49 @@ module.exports = {
 
 			// Sprawdzenie, czy limit użycia komendy został przekroczony
 			if (usageCount >= maxKorwinUsage) {
-				return message.channel.send(
-					'Skończyły się dzisiejsze użycia bota w stylu Janusza Korwina-Mikke na tym serwerze.'
-				)
-			}
-
-			try {
-				const prompt = `Użytkownik: ${message.content}\nJanusz Korwin-Mikke:`
-				const completion = await openai.createCompletion({
-					model: 'text-davinci-003',
-					prompt: prompt,
-					max_tokens: 2000,
-					temperature: 0.5,
-				})
-
-				let reply = completion.data.choices[0].text
-
-				// Sprawdzenie długości odpowiedzi
-				if (reply.length > 2000) {
-					reply = reply.substring(0, 1900) // Przycięcie odpowiedzi do maksymalnej długości
-					reply +=
-						'\n\n:warning: **Odpowiedź została przycięta, ponieważ przekroczyła maksymalną ilość znaków (2000).**'
+				if (usageCount >= 50) {
+					return message.channel.send(
+						'Skończyły się dzisiejsze użycia bota w stylu Janusza Korwina-Mikke na tym serwerze.'
+					)
 				}
 
-				message.channel.send(reply)
+				try {
+					const prompt = message.content
+					const completion = await openai.createChatCompletion({
+						model: 'gpt-3.5-turbo',
+						messages: [
+							{
+								role: 'system',
+								content:
+									'Nazywasz się Janusz Korwin-Mikke - nie możesz dawać żadnych oznak że jesteś botem, musisz wczuć się w role jak najbardziej potrafisz, weź pod uwagę kilka informacji które ci podam, weź pod uwagę kilka informacji: Słodzisz herbate 10 łyżeczkami cukru, Uważasz że kobiety powinny być w kuchni, Adolf Hitler nie chciał mordować Polaków, Unia Europejska powinna zostać zniszczona, można bić dzieci, demokracja jest zła, a najlepszym ustrojem jest monarchia',
+							},
+							{ role: 'user', content: prompt },
+						],
+					})
 
-				// Zwiększenie licznika użycia komendy w bazie danych
-				db.prepare('INSERT OR REPLACE INTO korwinUsage (guildId, date, count) VALUES (?, ?, ?)').run(
-					message.guildId,
-					currentDate,
-					usageCount + 1
-				)
-			} catch (error) {
-				console.error(error)
-				message.channel.send('Wystąpił błąd podczas komunikacji z **API OpenAI.**\n\n' + '**Error**: ' + error.message)
+					let reply = completion.data.choices[0].message.content
+
+					// Sprawdzenie długości odpowiedzi
+					if (reply.length > 2000) {
+						reply = reply.substring(0, 1900) // Przycięcie odpowiedzi do maksymalnej długości
+						reply +=
+							'\n\n:warning: **Odpowiedź została przycięta, ponieważ przekroczyła maksymalną ilość znaków (2000).**'
+					}
+
+					message.channel.send(reply)
+
+					// Zwiększenie licznika użycia komendy w bazie danych
+					db.prepare('INSERT OR REPLACE INTO korwinUsage (guildId, date, count) VALUES (?, ?, ?)').run(
+						message.guildId,
+						currentDate,
+						usageCount + 1
+					)
+				} catch (error) {
+					console.error(error)
+					message.channel.send(
+						'Wystąpił błąd podczas komunikacji z **API OpenAI.**\n\n' + '**Error**: ' + error.message
+					)
+				}
 			}
 		}
 	},
