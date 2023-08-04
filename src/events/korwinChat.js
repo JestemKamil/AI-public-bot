@@ -14,7 +14,6 @@ module.exports = {
 
 		// Sprawdzenie, czy wiadomość została wysłana na właściwym kanale i czy nie została wysłana przez bota
 		if (message.channel.id === chatChannelId && !message.author.bot) {
-			console.log("huj dupa siusiak");
 			// Pobranie aktualnej daty w formacie YYYY-MM-DD
 			const currentDate = new Date().toISOString().split('T')[0]
 

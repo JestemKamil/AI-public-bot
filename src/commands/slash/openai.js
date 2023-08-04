@@ -45,6 +45,12 @@ module.exports = {
 			fetchReply: false,
 		})
 
+		// Zwiększenie licznika użycia komendy w bazie danych
+		db.prepare(`INSERT OR REPLACE INTO openaiUsage (guildId, date, count) VALUES (?, DATE('now'), ?)`).run(
+			interaction.guildId,
+			usageCount + 1
+		)
+
 		try {
 			const completion = await openai.createChatCompletion({
 				model: 'gpt-3.5-turbo',
@@ -70,13 +76,7 @@ module.exports = {
 				)
 			}
 
-			// Zwiększenie licznika użycia komendy w bazie danych
-			db.prepare(`INSERT OR REPLACE INTO openaiUsage (guildId, date, count) VALUES (?, DATE('now'), ?)`).run(
-				interaction.guildId,
-				usageCount + 1
-			)
 		} catch (error) {
-			console.error(error)
 			await interaction.followUp(
 				'Wystąpił błąd podczas komunikacji z **API OpenAI.**\n\n' + '**Error**: ' + error.message
 			)

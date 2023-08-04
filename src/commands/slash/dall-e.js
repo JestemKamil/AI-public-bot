@@ -33,6 +33,12 @@ module.exports = {
 				fetchReply: false,
 			})
 		}
+		// Zwiększenie licznika użycia komendy w bazie danych
+		db.prepare('INSERT OR REPLACE INTO dAllEUsage (guildId, date, count) VALUES (?, ?, ?)').run(
+			interaction.guildId,
+			currentDate,
+			usageCount + 1
+		)
 
 		await interaction.deferReply()
 
@@ -55,14 +61,7 @@ module.exports = {
 
 			await interaction.editReply({ embeds: [embed] })
 
-			// Zwiększenie licznika użycia komendy w bazie danych
-			db.prepare('INSERT OR REPLACE INTO dAllEUsage (guildId, date, count) VALUES (?, ?, ?)').run(
-				interaction.guildId,
-				currentDate,
-				usageCount + 1
-			)
 		} catch (error) {
-			console.error(error)
 			await interaction.editReply(
 				'Wystąpił błąd podczas komunikacji z **API OpenAI lub DALL-E.**\n\n' + '**Error**: ' + error.message
 			)
