@@ -2,8 +2,6 @@ const { SlashCommandBuilder } = require('@discordjs/builders')
 const Database = require('better-sqlite3')
 const db = new Database('./main.db')
 
-
-
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('setup')
@@ -54,6 +52,9 @@ module.exports = {
 					channelID
 				)
 
+				// Ustawienie setupStatus na 1
+				db.prepare('INSERT OR REPLACE INTO korwinSetup (guildId, setupStatus) VALUES (?, 1)').run(interaction.guildId)
+
 				setTimeout(() => {
 					updatingMessage.edit(
 						`<a:succes:1136659149388779670> Pomyślnie ustawiono kanał  <#${channelID}> jako kanał do rozmowy z botem w stylu Janusza Korwina-Mikke.`
@@ -63,12 +64,27 @@ module.exports = {
 				// Usunięcie ID kanału z bazy danych
 				db.prepare('DELETE FROM korwinChatChannel WHERE guildId = ?').run(interaction.guildId)
 
+				// Ustawienie setupStatus na 0
+				db.prepare('INSERT OR REPLACE INTO korwinSetup (guildId, setupStatus) VALUES (?, 0)').run(interaction.guildId)
+
 				setTimeout(() => {
 					updatingMessage.edit(
 						`<a:succes:1136659149388779670> Kanał do rozmowy z botem w stylu Janusza Korwina-Mikke został usunięty.`
 					)
 				}, 5000)
 			}
+		} else if (interaction.options.getSubcommand() === 'usuń') {
+			// Usunięcie ID kanału z bazy danych
+			db.prepare('DELETE FROM korwinChatChannel WHERE guildId = ?').run(interaction.guildId)
+
+			// Ustawienie setupStatus na 0
+			db.prepare('INSERT OR REPLACE INTO korwinSetup (guildId, setupStatus) VALUES (?, 0)').run(interaction.guildId)
+
+			setTimeout(() => {
+				updatingMessage.edit(
+					`<a:succes:1136659149388779670> Kanał do rozmowy z botem w stylu Janusza Korwina-Mikke został usunięty.`
+				)
+			}, 5000)
 		}
 	},
 }

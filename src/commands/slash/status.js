@@ -5,9 +5,7 @@ const db = new Database('./main.db')
 
 // Nowa komenda /status
 module.exports = {
-	data: new SlashCommandBuilder()
-		.setName('status')
-		.setDescription('Sprawdź aktualne użycie komend w stylu Janusza Korwina-Mikke'),
+	data: new SlashCommandBuilder().setName('status').setDescription('Sprawdź najważniejsze informacje o bocie'),
 	async execute(interaction) {
 		// Pobranie aktualnej daty w formacie YYYY-MM-DD
 		const currentDate = new Date().toISOString().split('T')[0]
@@ -44,6 +42,10 @@ module.exports = {
 
 		const remainingDAllEUsage = maxDAllEUsage - dAllEUsageCount
 
+		// Pobranie ustawienia setup dla komendy "korwin" z bazy danych
+		const setupRow = db.prepare('SELECT setupStatus FROM korwinSetup WHERE guildId = ?').get(interaction.guildId)
+		const setupStatus = setupRow ? setupRow.setupStatus : 0
+
 		// Formatowanie tekstu dla sekcji Chat Korwina
 		let korwinChatText
 		if (remainingKorwinChatUsage <= 0) {
@@ -68,17 +70,33 @@ module.exports = {
 			dallEText = `Komenda /dall-e: ${dAllEUsageCount}/${maxDAllEUsage}`
 		}
 
+		// Formatowanie tekstu dla sekcji Setup-korwin
+		let setupKorwinText
+		if (setupStatus === 1) {
+			setupKorwinText = 'Setup-korwin: **Tak**'
+		} else {
+			setupKorwinText = 'Setup-korwin: **Nie**'
+		}
+
 		const resetTime = new Date(currentDate).getTime() + 24 * 60 * 60 * 1000 // Czas resetu na następny dzień o północy
 
 		const embed = new EmbedBuilder()
-			.setColor(0xec4444)
+			.setColor(440041)
 			.setTitle('Status pozostałych limitów')
 			.setDescription(
-				`Dzisiejsze użycia bota na tym serwerze:\n${korwinChatText}\n${openaiText}\n${dallEText}\nLimity resetują się o północy (00:00).`
+				`Dzisiejsze użycia bota na tym serwerze:\n\n${korwinChatText}\n${openaiText}\n${dallEText}\n\nInne informacje:\n\n${setupKorwinText}\nLimity resetują się o północy (00:00).`
+			)
+			.setThumbnail(
+				'https://cdn.discordapp.com/attachments/1044648147986681906/1137153889158828102/img-YrI5LoRaHPuTeiwLAAY3rbTx_preview_rev_1.png'
 			)
 			.addFields({ name: 'Pozostałe użycia chatu Korwina:', value: remainingKorwinChatUsage.toString(), inline: true })
 			.addFields({ name: 'Pozostałe użycia komendy /openai:', value: remainingOpenaiUsage.toString(), inline: true })
 			.addFields({ name: 'Pozostałe użycia komendy /dall-e:', value: remainingDAllEUsage.toString(), inline: true })
+			.setFooter({
+				text: 'Inteligentny bot',
+				iconURL:
+					'https://cdn.discordapp.com/attachments/1044648147986681906/1137153889158828102/img-YrI5LoRaHPuTeiwLAAY3rbTx_preview_rev_1.png',
+			})
 
 		await interaction.reply({ embeds: [embed] })
 	},

@@ -41,7 +41,7 @@ module.exports = {
 		}
 
 		await interaction.reply({
-			content: `<:1108820964948590724:1136620320397197322> **Odpowiedź na pytanie:** ${question}\n\n<:1108820964948590724:1136620320397197322> **Autor wiadomości:** ${interaction.user}`,
+			content: `<:strzala:1137159505357058129> **Odpowiedź na pytanie:** ${question}\n\n<:strzala:1137159505357058129> **Autor wiadomości:** ${interaction.user}`,
 			fetchReply: false,
 		})
 
@@ -55,7 +55,11 @@ module.exports = {
 			const completion = await openai.createChatCompletion({
 				model: 'gpt-3.5-turbo',
 				messages: [
-					{ role: 'system', content: 'Jesteś asystentem AI - twoim zadaniem jest odpowiadanie na pytania i pomoc.' },
+					{
+						role: 'system',
+						content:
+							'Jesteś asystentem AI - twoim zadaniem jest odpowiadanie na pytania i pomoc. Jeśli ktoś ci zada pytanie kim jestes odpowiedz ze jestes inteligentnym botem stworzonym przez theproshizer oraz jestem_kamil opierającym się na sztucznej inteligencji.',
+					},
 					{ role: 'user', content: question },
 				],
 			})
@@ -75,7 +79,6 @@ module.exports = {
 					'<:warning:1234567890> **Odpowiedź przekroczyła maksymalną ilość tokenów (2000) i została przerwana.**'
 				)
 			}
-
 		} catch (error) {
 			await interaction.followUp(
 				'Wystąpił błąd podczas komunikacji z **API OpenAI.**\n\n' + '**Error**: ' + error.message

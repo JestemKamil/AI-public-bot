@@ -19,7 +19,7 @@ db.exec(createOpenaiUsageTableQuery)
 
 const createCommandLimitsTableQuery = `CREATE TABLE IF NOT EXISTS commandLimits (
   guildId TEXT PRIMARY KEY,
-  korwinLimit INTEGER NOT NULL DEFAULT 5,
+  korwinLimit INTEGER NOT NULL DEFAULT 25,
   openaiLimit INTEGER NOT NULL DEFAULT 25,
   dallELimit INTEGER NOT NULL DEFAULT 25
 );`
@@ -40,6 +40,4 @@ const createKorwinUsageTableQuery = `CREATE TABLE IF NOT EXISTS korwinUsage (
 );`
 db.exec(createKorwinUsageTableQuery)
 
-
-
-
+db.prepare('CREATE TABLE IF NOT EXISTS korwinSetup (guildId TEXT PRIMARY KEY, setupStatus INTEGER)').run()

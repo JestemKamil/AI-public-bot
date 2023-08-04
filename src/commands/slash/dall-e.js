@@ -48,19 +48,18 @@ module.exports = {
 			const embed = new EmbedBuilder() // Use your custom EmbedBuilder
 				.setTitle('Oto wygenerowany obraz za pomocą AI')
 				.setImage(generatedImageURL)
-				.setColor(0xec4444)
+				.setColor(440041)
 				.addFields(
 					{ name: 'Opis obrazka:', value: prompt, inline: true },
 					{ name: 'Autor wiadomości:', value: interaction.user.username, inline: true }
 				)
 				.setFooter({
-					text: 'Csowicze',
+					text: 'Inteligentny bot',
 					iconURL:
-						'https://cdn.discordapp.com/avatars/1108765755476029442/76205059c498d5d389f4fb1043f92638.png?width=559&height=559',
+						'https://cdn.discordapp.com/attachments/1044648147986681906/1137153889158828102/img-YrI5LoRaHPuTeiwLAAY3rbTx_preview_rev_1.png',
 				})
 
 			await interaction.editReply({ embeds: [embed] })
-
 		} catch (error) {
 			await interaction.editReply(
 				'Wystąpił błąd podczas komunikacji z **API OpenAI lub DALL-E.**\n\n' + '**Error**: ' + error.message

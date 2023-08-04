@@ -6,7 +6,7 @@ module.exports = {
 	async execute(interaction) {
 		const embed = new EmbedBuilder() // Use EmbedBuilder instead of MessageEmbed
 			.setTitle('Informacje o bocie')
-			.setColor(0xec4444) // Use a valid color number instead of a string
+			.setColor(440041) // Use a valid color number instead of a string
 			.setDescription(
 				'Jest to bot oparty na technologii sztucznej inteligencji.\nBot został stworzony przez `theproshizer`.\nAby AI wygenerowało obrazek poprawnie musisz napisać polecenie po angielsku.\n\nLista dostępnych komend w bocie: '
 			)
@@ -19,9 +19,9 @@ module.exports = {
 				{ name: 'Najnowsza komenda:', value: '/dall-e', inline: true }
 			)
 			.setFooter({
-				text: 'Csowicze',
+				text: 'Inteligentny bot',
 				iconURL:
-					'https://cdn.discordapp.com/avatars/1108765755476029442/76205059c498d5d389f4fb1043f92638.png?width=559&height=559',
+					'https://cdn.discordapp.com/attachments/1044648147986681906/1137153889158828102/img-YrI5LoRaHPuTeiwLAAY3rbTx_preview_rev_1.png',
 			})
 
 		await interaction.reply({ embeds: [embed] })
