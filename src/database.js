@@ -39,3 +39,7 @@ const createKorwinUsageTableQuery = `CREATE TABLE IF NOT EXISTS korwinUsage (
   PRIMARY KEY (guildId, date)
 );`
 db.exec(createKorwinUsageTableQuery)
+
+
+
+

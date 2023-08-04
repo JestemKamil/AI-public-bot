@@ -18,7 +18,7 @@ module.exports = {
 
 		// Pobranie limitu użycia komendy /dall-e dla tego serwera z bazy danych
 		const limitRow = db.prepare('SELECT dallELimit FROM commandLimits WHERE guildId = ?').get(interaction.guildId)
-		const maxDAllEUsage = limitRow ? limitRow.dallELimit : 25 // Ustawienie domyślnego limitu na 25, jeśli nie został ustawiony przez administratora
+		const maxDAllEUsage = limitRow ? limitRow.dallELimit : 1 // Ustawienie domyślnego limitu na 25, jeśli nie został ustawiony przez administratora
 
 		// Pobranie liczby użycia komendy z bazy danych
 		const usageRow = db

@@ -19,7 +19,7 @@ module.exports = {
 
 			// Pobranie limitu użycia chatu Korwina dla tego serwera z bazy danych
 			const limitRow = db.prepare('SELECT korwinLimit FROM commandLimits WHERE guildId = ?').get(message.guildId)
-			const maxKorwinUsage = limitRow ? limitRow.korwinLimit : 25 // Ustawienie domyślnego limitu na 25, jeśli nie został ustawiony przez administratora
+			const maxKorwinUsage = limitRow ? limitRow.korwinLimit : 2 // Ustawienie domyślnego limitu na 25, jeśli nie został ustawiony przez administratora
 
 			// Pobranie liczby użycia komendy z bazy danych
 			const usageRow = db
