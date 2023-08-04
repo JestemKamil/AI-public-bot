@@ -5,14 +5,6 @@ const { apiopenai } = require('../../data.json')
 const Database = require('better-sqlite3')
 const db = new Database('./main.db')
 
-const createTableQuery = `CREATE TABLE IF NOT EXISTS dAllEUsage (
-	guildId TEXT PRIMARY KEY,
-	date TEXT NOT NULL,
-	count INTEGER NOT NULL DEFAULT 0
-  );`
-
-db.exec(createTableQuery)
-
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('dall-e')

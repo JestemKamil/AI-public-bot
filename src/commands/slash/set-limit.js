@@ -5,15 +5,7 @@ const db = new Database('./main.db')
 // Lista ID użytkowników, którzy mogą używać tej komendy
 const allowedUsers = ['541526393641500675', '234567890123456789']
 
-// Utwórz tabelę, jeśli nie istnieje
-const createTableQuery = `CREATE TABLE IF NOT EXISTS commandLimits (
-  guildId TEXT PRIMARY KEY,
-  korwinLimit INTEGER NOT NULL DEFAULT 5,
-  openaiLimit INTEGER NOT NULL DEFAULT 25,
-  dallELimit INTEGER NOT NULL DEFAULT 25
-);`
 
-db.exec(createTableQuery)
 
 module.exports = {
 	data: new SlashCommandBuilder()
