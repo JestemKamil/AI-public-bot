@@ -14,6 +14,7 @@ module.exports = {
 
 		// Sprawdzenie, czy wiadomość została wysłana na właściwym kanale i czy nie została wysłana przez bota
 		if (message.channel.id === chatChannelId && !message.author.bot) {
+			console.log("huj dupa siusiak");
 			// Pobranie aktualnej daty w formacie YYYY-MM-DD
 			const currentDate = new Date().toISOString().split('T')[0]
 
@@ -28,8 +29,7 @@ module.exports = {
 			const usageCount = usageRow ? usageRow.count : 0
 
 			// Sprawdzenie, czy limit użycia komendy został przekroczony
-			if (usageCount >= maxKorwinUsage) {
-				if (usageCount >= 50) {
+				if (usageCount >= maxKorwinUsage) {
 					return message.channel.send(
 						'Skończyły się dzisiejsze użycia bota w stylu Janusza Korwina-Mikke na tym serwerze.'
 					)
@@ -72,7 +72,7 @@ module.exports = {
 						'Wystąpił błąd podczas komunikacji z **API OpenAI.**\n\n' + '**Error**: ' + error.message
 					)
 				}
-			}
+			
 		}
 	},
 }
