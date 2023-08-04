@@ -62,9 +62,8 @@ readdirSync('./src/commands/normal').forEach(async file => {
 	}
 })
 
-console.log('Bot stworzony przez TheProShizer#0001')
-console.log('Masz propozycje co do bota? napisz od mnie na discordzie!')
-console.log('Nie pomagam jesli ktos edytuje kod na wlasna reke')
+console.log('Bot stworzony przez theproshizer i jestem_kamil');
+console.log('Bot się uruchamia...');
 
 //slash-command-handler
 const slashcommands = []
@@ -80,7 +79,7 @@ client.on('ready', async () => {
 	} catch (error) {
 		console.error(error)
 	}
-	log(`${client.user.username} Jest online i chyba działa :)`)
+	log(`Bot ${client.user.username} został uruchomiony`)
 })
 
 //event-handler
