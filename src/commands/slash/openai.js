@@ -18,20 +18,10 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('openai')
 		.setDescription('Zadaj pytanie do modelu OpenAI')
-		.addStringOption(option => option.setName('treść').setDescription('Treść pytania').setRequired(true))
-		.addIntegerOption(option => option.setName('temperatura').setDescription('Temperatura odpowiedzi (1-100)')),
+		.addStringOption(option => option.setName('treść').setDescription('Treść pytania').setRequired(true)),
 	async execute(interaction) {
-		const question = interaction.options.getString('treść')
-		const temperatureInput = interaction.options.getInteger('temperatura')
-
-		// Walidacja temperatury
-		let temperature = 0
-		if (temperatureInput) {
-			if (temperatureInput < 1 || temperatureInput > 100) {
-				return await interaction.reply(`Temperatura musi być w zakresie od 1 do 100.`)
-			}
-			temperature = temperatureInput / 100
-		}
+		const question = interaction.options.getString('treść');
+		let usageCount = db.prepare(`SELECT count FROM openaiUsage WHERE guildId = ?`).get(interaction.guildId).count;
 
 		// Sprawdzenie długości wiadomości
 		if (question.length > 2000) {
@@ -44,14 +34,13 @@ module.exports = {
 		})
 
 		try {
-			const completion = await openai.createCompletion({
-				model: 'text-davinci-003',
-				prompt: question,
-				max_tokens: 2000,
-				temperature: temperature,
-			})
+			const completion = await openai.createChatCompletion({
+				model: "gpt-3.5-turbo",
+				messages: [{"role": "system", "content": "Jesteś asystentem AI - twoim zadaniem jest odpowiadanie na pytania i pomoc."}, {role: "user", content: question}],
+				});
+	
 
-			let reply = completion.data.choices[0].text
+			let reply = completion.data.choices[0].message.content
 
 			// Sprawdzenie długości odpowiedzi
 			if (reply.length > 2000) {
@@ -66,12 +55,11 @@ module.exports = {
 					'<:warning:1234567890> **Odpowiedź przekroczyła maksymalną ilość tokenów (2000) i została przerwana.**'
 				)
 			}
-
+			usageCount++
 			// Zwiększenie licznika użycia komendy w bazie danych
-			db.prepare('INSERT OR REPLACE INTO openaiUsage (guildId, date, count) VALUES (?, ?, ?)').run(
+			db.prepare(`INSERT OR REPLACE INTO openaiUsage (guildId, date, count) VALUES (?, DATE('now'), ?)`).run(
 				interaction.guildId,
-				currentDate,
-				usageCount + 1
+				usageCount
 			)
 		} catch (error) {
 			console.error(error)
