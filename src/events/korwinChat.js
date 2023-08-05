@@ -5,6 +5,8 @@ const openai = new OpenAIApi(configuration)
 const Database = require('better-sqlite3')
 const db = new Database('./main.db')
 
+//TODO naprawic sendtypin
+
 module.exports = {
 	name: 'messageCreate',
 	async execute(message) {
@@ -38,9 +40,9 @@ module.exports = {
 			message.channel.sendTyping()
 
 			// Ustawienie timera na 10 sekund
-			const timer = setTimeout(() => {
-				message.channel.sendTyping(false)
-			}, 10000)
+			const timer = setInterval(() => {
+				message.channel.sendTyping()
+			}, 9000)
 
 			try {
 				const prompt = message.content
@@ -67,7 +69,7 @@ module.exports = {
 				message.channel.send(reply)
 
 				// Wyłączenie informacji o pisaniu wiadomości przez bota i wyczyszczenie timera
-				clearTimeout(timer)
+				clearInterval(timer)
 				message.channel.sendTyping(false)
 
 				// Zwiększenie licznika użycia komendy w bazie danych
