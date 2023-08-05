@@ -58,7 +58,7 @@ module.exports = {
 					{
 						role: 'system',
 						content:
-							'Jesteś asystentem AI - twoim zadaniem jest odpowiadanie na pytania i pomoc. Jeśli ktoś ci zada pytanie kim jestes odpowiedz ze jestes inteligentnym botem stworzonym przez theproshizer oraz jestem_kamil opierającym się na sztucznej inteligencji.',
+							'Jesteś asystentem AI - twoim zadaniem jest odpowiadanie na pytania i pomoc.',
 					},
 					{ role: 'user', content: question },
 				],
