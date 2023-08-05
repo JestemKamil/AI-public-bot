@@ -93,7 +93,7 @@ module.exports = {
 			.addFields({ name: 'Pozostałe użycia komendy /openai:', value: remainingOpenaiUsage.toString(), inline: true })
 			.addFields({ name: 'Pozostałe użycia komendy /dall-e:', value: remainingDAllEUsage.toString(), inline: true })
 			.setFooter({
-				text: 'Inteligentny bot',
+				text: 'Sparky AI',
 				iconURL:
 					'https://cdn.discordapp.com/attachments/1044648147986681906/1137153889158828102/img-YrI5LoRaHPuTeiwLAAY3rbTx_preview_rev_1.png',
 			})
