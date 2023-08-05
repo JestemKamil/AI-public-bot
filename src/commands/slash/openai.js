@@ -6,8 +6,6 @@ const openai = new OpenAIApi(configuration)
 const Database = require('better-sqlite3')
 const db = new Database('./main.db')
 
-//TODO naprawic sendtypin
-
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('openai')
@@ -37,18 +35,27 @@ module.exports = {
 			})
 		}
 
-		// Wysłanie informacji o pisaniu wiadomości przez bota
-		interaction.channel.sendTyping()
+		// Sprawdzenie długości wiadomości
+		if (question.length > 2000) {
+			return await interaction.reply('Wiadomość przekroczyła maksymalną ilość znaków (2000). Proszę skrócić wiadomość.')
+		}
 
-		// Ustawienie timera na 10 sekund
-		const timer = setInterval(() => {
-			interaction.channel.sendTyping()
-		}, 9000)
 
+
+		// Wysłanie odpowiedzi na pytanie
 		await interaction.reply({
 			content: `<:strzala:1137159505357058129> **Odpowiedź na pytanie:** ${question}\n\n<:strzala:1137159505357058129> **Autor wiadomości:** ${interaction.user}`,
 			fetchReply: false,
 		})
+
+		// Wysłanie informacji o pisaniu wiadomości przez bota usuwa się automatycznie
+		interaction.channel.sendTyping()
+
+		// Zwiększenie licznika użycia komendy w bazie danych
+		db.prepare(`INSERT OR REPLACE INTO openaiUsage (guildId, date, count) VALUES (?, DATE('now'), ?)`).run(
+			interaction.guildId,
+			usageCount + 1
+		)
 
 		try {
 			const completion = await openai.createChatCompletion({
@@ -72,24 +79,14 @@ module.exports = {
 
 			await interaction.followUp(reply)
 
-			// Wyłączenie informacji o pisaniu wiadomości przez bota i wyczyszczenie timera
-			clearInterval(timer)
-			interaction.channel.sendTyping(false)
-
 			if (completion.data.choices[0].finish_reason === 'incomplete') {
 				await interaction.followUp(
 					'<:warning:1234567890> **Odpowiedź przekroczyła maksymalną ilość tokenów (2000) i została przerwana.**'
 				)
 			}
-
-			// Zwiększenie licznika użycia komendy w bazie danych
-			db.prepare(`INSERT OR REPLACE INTO openaiUsage (guildId, date, count) VALUES (?, DATE('now'), ?)`).run(
-				interaction.guildId,
-				usageCount + 1
-			)
 		} catch (error) {
 			await interaction.followUp(
-				'Wystąpił błąd podczas komunikacji z **API OpenAI.**\n\n' + '**Error**: ' + error.message
+				'Wystąpił błąd podczas komunikacji z **API OpenAI.**\n\n' + '**Error**: https://http.cat/' + error.response.status
 			)
 		}
 	},

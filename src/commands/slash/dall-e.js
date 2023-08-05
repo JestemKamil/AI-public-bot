@@ -62,7 +62,7 @@ module.exports = {
 			await interaction.editReply({ embeds: [embed] })
 		} catch (error) {
 			await interaction.editReply(
-				'Wystąpił błąd podczas komunikacji z **API OpenAI lub DALL-E.**\n\n' + '**Error**: ' + error.message
+				'Wystąpił błąd podczas komunikacji z **API OpenAI lub DALL-E.**\n\n' + '**Error**: https://http.cat/' + error.response.status
 			)
 		}
 	},

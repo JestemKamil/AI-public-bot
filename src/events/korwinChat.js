@@ -36,13 +36,8 @@ module.exports = {
 				)
 			}
 
-			// Wysłanie informacji o pisaniu wiadomości przez bota
+			// Wysłanie informacji o pisaniu wiadomości przez bota usuwa się automatycznie
 			message.channel.sendTyping()
-
-			// Ustawienie timera na 10 sekund
-			const timer = setInterval(() => {
-				message.channel.sendTyping()
-			}, 9000)
 
 			try {
 				const prompt = message.content
@@ -68,10 +63,6 @@ module.exports = {
 
 				message.channel.send(reply)
 
-				// Wyłączenie informacji o pisaniu wiadomości przez bota i wyczyszczenie timera
-				clearInterval(timer)
-				message.channel.sendTyping(false)
-
 				// Zwiększenie licznika użycia komendy w bazie danych
 				db.prepare('INSERT OR REPLACE INTO korwinUsage (guildId, date, count) VALUES (?, ?, ?)').run(
 					message.guildId,
@@ -80,7 +71,7 @@ module.exports = {
 				)
 			} catch (error) {
 				console.error(error)
-				message.channel.send('Wystąpił błąd podczas komunikacji z **API OpenAI.**\n\n' + '**Error**: ' + error.message)
+				message.channel.send('Wystąpił błąd podczas komunikacji z **API OpenAI.**\n\n' + '**Error**: https://http.cat/' + error.response.status)
 			}
 		}
 	},

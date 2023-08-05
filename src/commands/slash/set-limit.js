@@ -3,7 +3,7 @@ const Database = require('better-sqlite3')
 const db = new Database('./main.db')
 
 // Lista ID użytkowników, którzy mogą używać tej komendy
-const allowedUsers = ['541526393641500675', '234567890123456789']
+const allowedUsers = ['541526393641500675', '431446811270709248']
 
 
 
