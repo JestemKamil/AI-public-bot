@@ -13,7 +13,7 @@ Nasz bot to bot który został stworzony pod typowo public AI bota, jest on spec
 
 Wejdź do pliku `config.js` i uzupelnij pola
 
-```json
+```js
 module.exports = {
 	prefix: '!',
 	owner: 'ID-OWNERA-BOTA',
@@ -28,4 +28,12 @@ następnie wejdź do pliku `data.json` i uzupełnij pola
 	"apiopenai": "API-OPENAI https://platform.openai.com/account/api-keys",
 	"dallEModelId": "image-dall-e-003"
 }
+```
+
+## 🧠 Instalacja
+
+Otwórz terminal bota i wpisz oto te polecenie
+
+```sh
+npm install
 ```
