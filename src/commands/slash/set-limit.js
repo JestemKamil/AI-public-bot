@@ -3,9 +3,7 @@ const Database = require('better-sqlite3')
 const db = new Database('./main.db')
 
 // Lista ID użytkowników, którzy mogą używać tej komendy
-const allowedUsers = ['541526393641500675', '431446811270709248']
-
-
+const allowedUsers = ['ID-OSOBY-KTORA-MOZE-UZYWAC-KOMENDY', 'ID-OSOBY-KTORA-MOZE-UZYWAC-KOMENDY']
 
 module.exports = {
 	data: new SlashCommandBuilder()
