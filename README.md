@@ -1,12 +1,15 @@
 <h1 align="center">Public AI bot</h1>
 
-Nasz bot to bot który został stworzony pod typowo public AI bota, jest on specjalnie pod to skonfigurowany.
+Nasz bot to bot który został stworzony pod typowo public AI bota, jest on specjalnie pod to skonfigurowany, ale możesz też go oczywiście użyć tylko na swoim serwerze.
 
 ## 🚧 Wymagania
 
 1: Token bota discord [klik](https://discord.com/developers/docs/intro)
+
 1.1: Pamiętaj aby włączyć intenty w zakładce bot 3 ostatnie opcje
+
 2: OpenAI Api (za darmo 5 dolarów) [klik](https://platform.openai.com/account/api-keys)
+
 3: Node.js (bez tego nie uruchomisz bota)
 
 ## ⚙️ Konfiguracja
@@ -37,3 +40,13 @@ Otwórz terminal bota i wpisz oto te polecenie
 ```sh
 npm install
 ```
+
+## 🏃‍♀️ Uruchamianie
+
+Po prostu wpisz 
+
+```sh
+node index.js
+```
+
+## 🔧 Szczegółowe informacje znajdziesz na stronie wiki
