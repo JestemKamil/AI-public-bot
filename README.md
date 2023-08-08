@@ -50,3 +50,4 @@ node index.js
 ```
 
 ## 🔧 Szczegółowe informacje znajdziesz na stronie wiki
+https://github.com/JestemKamil/AI-public-bot/wiki
