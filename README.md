@@ -1,6 +1,6 @@
 <h1 align="center">Public AI bot</h1>
 
-Nasz bot to bot który został stworzony pod typowo public AI bota, jest on specjalnie pod to skonfigurowany, ale możesz też go oczywiście użyć tylko na swoim serwerze.
+Nasz bot to bot który został stworzony pod typowo public AI bota, jest on specjalnie pod to skonfigurowany, ale możesz też go oczywiście użyć tylko na swoim serwerze. Bota wykonał TheProShizer oraz Jestem_Kamil
 
 ## 🚧 Wymagania
 
