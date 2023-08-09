@@ -55,6 +55,14 @@ https://github.com/JestemKamil/AI-public-bot/wiki
 ## 📸 Screenshoty
 
 ![Help](https://cdn.discordapp.com/attachments/1136690681289642015/1138839678888456273/image.png)
+![Obrazek 1](https://cdn.discordapp.com/attachments/1136690682862501949/1138842066605056172/image.png)
+![Obrazek 2](https://cdn.discordapp.com/attachments/1136690682862501949/1138841935881195651/image.png)
+![Obrazek 3](https://cdn.discordapp.com/attachments/1136690682862501949/1138841898476376180/image.png)
+![Obrazek 4](https://cdn.discordapp.com/attachments/1136690682862501949/1138841862979997766/image.png)
+![Obrazek 5](https://cdn.discordapp.com/attachments/1136690682862501949/1138841732528754879/image.png)
+![Obrazek 6](https://cdn.discordapp.com/attachments/1136690682862501949/1138841705521631403/image.png)
+![Obrazek 7](https://cdn.discordapp.com/attachments/1136690682862501949/1138841581542199437/image.png)
+![Obrazek 8](https://cdn.discordapp.com/attachments/1136690682862501949/1138842496412160040/image.png)
 
 
 
