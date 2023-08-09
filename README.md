@@ -51,3 +51,9 @@ node index.js
 
 ## 🔧 Szczegółowe informacje znajdziesz na stronie wiki
 https://github.com/JestemKamil/AI-public-bot/wiki
+
+## 📸 Screenshoty
+
+![Ask]([https://user-images.githubusercontent.com/89854127/218874201-c64068e8-708e-49ca-a322-bcb1e4a76646.png](https://cdn.discordapp.com/attachments/1136690681289642015/1138839678888456273/image.png)https://cdn.discordapp.com/attachments/1136690681289642015/1138839678888456273/image.png)
+
+
