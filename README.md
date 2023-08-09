@@ -54,7 +54,8 @@ https://github.com/JestemKamil/AI-public-bot/wiki
 
 ## 📸 Screenshoty
 
-![Help]([adres_url_obrazu](https://cdn.discordapp.com/attachments/1136690681289642015/1138839678888456273/image.png)https://cdn.discordapp.com/attachments/1136690681289642015/1138839678888456273/image.png)
+![Help](https://cdn.discordapp.com/attachments/1136690681289642015/1138839678888456273/image.png)
+
 
 
 
