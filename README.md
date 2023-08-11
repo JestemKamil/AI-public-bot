@@ -63,6 +63,7 @@ https://github.com/JestemKamil/AI-public-bot/wiki
 ![Obrazek 6](https://cdn.discordapp.com/attachments/1136690682862501949/1138841705521631403/image.png)
 ![Obrazek 7](https://cdn.discordapp.com/attachments/1136690682862501949/1138841581542199437/image.png)
 ![Obrazek 8](https://cdn.discordapp.com/attachments/1136690682862501949/1138842496412160040/image.png)
+![Obrazek 9](https://cdn.discordapp.com/attachments/1136690682862501949/1139645164600700928/image.png)
 
 
 
