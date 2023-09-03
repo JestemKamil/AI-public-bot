@@ -49,7 +49,7 @@ Po prostu wpisz
 node index.js
 ```
 
-## 🔧 Szczegółowe informacje znajdziesz na stronie wiki
+## 🔧 Szczegółowe informacje znajdziesz na stronie wikia
 https://github.com/JestemKamil/AI-public-bot/wiki
 
 ## 📸 Screenshoty
